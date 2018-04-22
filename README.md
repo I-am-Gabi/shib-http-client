@@ -32,13 +32,42 @@ Example
 -------
 
 <pre><code>// Initialize OpenSAML
-DefaultBootstrap.bootstrap();
+import java.io.IOException;
+import java.io.InputStream;
 
-// The last argument indicates to accept any certificate
-HttpClient client = new ShibHttpClient(aIdpUrl, aUsername, aPassword, true);
-HttpGet req = new HttpGet("https://my/protected/url");
-HttpResponse res = client.execute(req);
-... = res.getEntity().getContent(); // returns an InputStream
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.opensaml.DefaultBootstrap;
+import org.opensaml.xml.ConfigurationException;
+
+import de.tudarmstadt.ukp.shibhttpclient.ShibHttpClient;
+
+public class Main {
+	
+	private static final String Username = "...";
+	private static final String Password = "..."; 
+	private static final String IdpUrl = "https://MY-IDP-HOST/idp/profile/SAML2/SOAP/ECP";  
+	private static final String protected_url = "..."; 
+
+	public static void main(String[] args) throws ConfigurationException, ClientProtocolException, IOException { 
+		DefaultBootstrap.bootstrap();
+		
+		HttpClient client = new ShibHttpClient(IdpUrl, Username, Password, true);
+		
+		try {
+			HttpGet req = new HttpGet(protected_url);
+			System.out.println(req.toString());
+			HttpResponse res = client.execute(req);
+			
+			InputStream output = res.getEntity().getContent(); // returns an InputStream
+			System.out.println(output.read());
+		} finally { 
+	    }
+	}
+
+}
 </code></pre>
 
 
