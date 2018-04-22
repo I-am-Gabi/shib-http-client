@@ -517,6 +517,7 @@ implements HttpClient
             idpLoginRequest.getParams().setBooleanParameter(AUTH_IN_PROGRESS, true);
             idpLoginRequest.addHeader(HttpHeaders.AUTHORIZATION,
                     "Basic " + Base64.encodeBytes((username + ":" + password).getBytes()));
+            idpLoginRequest.addHeader(HttpHeaders.CONTENT_TYPE, "text/xml; charset=utf-8");
             idpLoginRequest.setEntity(new StringEntity(xmlToString(idpLoginSoapRequest)));
             HttpResponse idpLoginResponse = client.execute(idpLoginRequest);
 
@@ -578,6 +579,7 @@ implements HttpClient
             HttpResponse spLoginResponse = client.execute(spLoginRequest);
             log.debug("Status: " + spLoginResponse.getStatusLine());
             log.debug("Authentication complete");
+            log.debug("Content --- " + spLoginResponse.getEntity().getContent());
 
             // -- Handle unredirectable cases -----------------------------------------------------
             // If we get a redirection and the request is redirectable, then let the client redirect
